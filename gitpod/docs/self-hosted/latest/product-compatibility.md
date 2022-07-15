@@ -37,8 +37,8 @@ The following tables explain what dependencies Gitpod has, and with what version
 | [**Image Registry**](./required-components#image-registry)                                     | Docker Registry                  | supported                                                                                                                                     | [Docker Registry HTTP API V2](https://docs.docker.com/registry/spec/api/) specification | [Docker Registry HTTP API V2](https://docs.docker.com/registry/spec/api/) specification |
 | [**Image Registry**](./required-components#image-registry)                                     | Google Container Registry        | supported                                                                                                                                     | default                                                                                 | default                                                                                 |
 | [**Image Registry**](./required-components#image-registry)                                     | AWS S3 (Minio + S3) \*           | supported                                                                                                                                     |                                                                                         |
-| [**Image Registry**](./required-components#image-registry)                                     | Artifactory                      | limited support                                                                                                                               |                                                                                         |
-| [**Image Registry**](./required-components#image-registry)                                     | Sonotype Nexus                   | limited support                                                                                                                               |                                                                                         |
+| [**Image Registry**](./required-components#image-registry)                                     | Artifactory                      | unproven                                                                                                                                      |                                                                                         |
+| [**Image Registry**](./required-components#image-registry)                                     | Sonotype Nexus                   | unproven                                                                                                                                      |                                                                                         |
 | [**Source Control Management System**](./required-components#source-control-management-system) | GitHub.com                       | supported                                                                                                                                     | current                                                                                 | current                                                                                 |
 | [**Source Control Management System**](./required-components#source-control-management-system) | GitLab.com                       | supported                                                                                                                                     | current                                                                                 | current                                                                                 |
 | [**Source Control Management System**](./required-components#source-control-management-system) | Bitbucket.org                    | supported                                                                                                                                     | current                                                                                 | current                                                                                 |
@@ -73,3 +73,18 @@ The secret expects to have two keys:
 - `s3SecretKey`
 
 </details>
+
+<!--  Team <> Component Responsibilities
+**Category** | Team
+---|---
+ Orchestration System | Team Workspace
+ Orchestration Platform | Team Workspace
+ Container Network Interface (CNI) | Team Workspace
+ Container Runtime | Team Workspace
+ Operating System | Team Workspace
+ Certificate Management| Team Workspace?
+ Database| Team Webapp
+ Bucket Storage| Team Workspace
+ Image Registry Docker Registry |  Team Workspace
+ Source Control Management System | Team Webapp
+ -->
