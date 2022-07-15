@@ -112,7 +112,6 @@ export const MENU: MenuEntry[] = [
     M("Operational Guides", "self-hosted/latest/operational-guides", [
       M("Updating", "self-hosted/latest/updating"),
       M("Monitoring", "self-hosted/latest/monitoring"),
-      M("Backing Up", "self-hosted/latest/backup-restore"),
     ]),
     M("Troubleshooting", "self-hosted/latest/troubleshooting", [
       M("Support Bundles", "self-hosted/latest/support-bundle", []),
@@ -120,7 +119,6 @@ export const MENU: MenuEntry[] = [
     ]),
     M("Background", "self-hosted/latest/background", [
       M("Dependencies", "self-hosted/latest/required-components"),
-      M("Disaster Recovery", "self-hosted/latest/disaster-recovery"),
     ]),
     M("Reference", "self-hosted/latest/reference", [
       M("Product Compatibility", "self-hosted/latest/product-compatibility"),
