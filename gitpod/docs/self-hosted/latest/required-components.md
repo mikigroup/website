@@ -8,7 +8,7 @@ title: Components & Dependencies
   export const prerender = true;
 </script>
 
-# Gitpod Self-Hosted ependencies
+# Gitpod Self-Hosted Dependencies
 
 > **Note:** For an up to date list of which versions of which components Gitpod Self-Hosted is compatible with, please see the [product compatibility](./product-compatibility) page.
 
