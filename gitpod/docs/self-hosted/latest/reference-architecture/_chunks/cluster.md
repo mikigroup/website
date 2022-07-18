@@ -457,7 +457,7 @@ Create the new security group (we do not rules added to it yet) using the vpc-id
 
 ```bash
 aws ec2 create-security-group --description 'Gitpod Services Nodegroup' --group-name 'gitpod-services' \
---vpc-id vpc-09a109f23dad0a298 --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=gitpod-services-sg},{Key=project,Value=gitpod},{Key=team,Value=cs}]'
+--vpc-id vpc-09a109f23dad0a298 --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=gitpod-services-sg},{Key=project,Value=gitpod},{Key=department,Value=demo}]'
 ```
 
 This should return something similar to:
