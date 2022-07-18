@@ -23,7 +23,7 @@ SSH access is required to work with desktop IDEs, such as [VS Code Desktop](/doc
 
 In this guide, we use [load balancing through a standalone network endpoint group (NEG)](https://cloud.google.com/kubernetes-engine/docs/how-to/standalone-neg). For this, the Gitpod proxy service will get the following annotation by default:
 
-```
+```bash
 cloud.google.com/neg: '{"exposed_ports": {"80":{},"443": {}}}'
 ```
 
@@ -54,7 +54,7 @@ In this reference architecture, we use [Google Cloud DNS](https://cloud.google.c
 
 At first, we need a **service account** with role `roles/dns.admin`. This service account is needed by cert-manager to alter the DNS settings for the DNS-01 resolution.
 
-```
+```bash
 DNS_SA=gitpod-dns01-solver
 DNS_SA_EMAIL="${DNS_SA}"@"${PROJECT_NAME}".iam.gserviceaccount.com
 gcloud iam service-accounts create "${DNS_SA}" --display-name "${DNS_SA}"
@@ -64,14 +64,14 @@ gcloud projects add-iam-policy-binding "${PROJECT_NAME}" \\
 
 Save the service account key to the file `./dns-credentials.json`:
 
-```
+```bash
 gcloud iam service-accounts keys create --iam-account "${DNS_SA_EMAIL}" \\
     ./dns-credentials.json
 ```
 
 After that, we create a [managed zone](https://cloud.google.com/dns/docs/zones).
 
-```
+```bash
 DOMAIN=gitpod.example.com
 gcloud dns managed-zones create "${CLUSTER_NAME}" \\
     --dns-name "${DOMAIN}." \\
@@ -106,7 +106,7 @@ helm upgrade \\
 
 Depending on how your DNS setup for your domain looks like, you most probably want to configure the nameservers for your domain. Run the following command to get a list of nameservers used by your Cloud DNS setup:
 
-```
+```bash
 gcloud dns managed-zones describe ${CLUSTER_NAME} --format json | jq '.nameServers'
 ```
 
@@ -115,7 +115,7 @@ gcloud dns managed-zones describe ${CLUSTER_NAME} --format json | jq '.nameServe
 
 If the Route53 zone has not yet been created, you can do so with the following command (replace `gitpod.example.com.` with the intended zone):
 
-```
+```bash
 export ROUTE53_CALLER=$(cat /proc/sys/kernel/random/uuid)
 aws route53 create-hosted-zone \\
     --name gitpod.example.com. \\
@@ -125,8 +125,13 @@ aws route53 create-hosted-zone \\
 
 Once the domain has been provisioned, you can get the details with the following command and record `Id` for later usage:
 
-```
+```bash
 aws route53 list-hosted-zones --query 'HostedZones[?Name==`gitpod.example.com.`]'
+```
+
+Which should return something like:
+
+```bash
 [
     {
         "Id": "/hostedzone/Z1230498123094",
@@ -153,7 +158,7 @@ Gitpod secures its internal communication between components with **TLS certific
 
 Example on how to installe cert-manager on GCP:
 
-```
+```bash
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm upgrade \\
@@ -175,7 +180,7 @@ helm upgrade \\
 
 Due to the networking behavior and service accounts in EKS, cert-manager needs a different installation procedure. First, install cert-manager with the following command:
 
-```
+```bash
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm upgrade \\
@@ -197,7 +202,7 @@ helm upgrade \\
 
 Once installation has completed, you will need to update the cert-manager security context setting for the service account provisioned for cert-manager by `eksctl`:
 
-```
+```bash
 kubectl patch deployment cert-manager -n cert-manager -p \\
   '{"spec":{"template":{"spec":{"securityContext":{"fsGroup":1001,"runAsNonRoot": true}}}}}'
 
@@ -213,7 +218,7 @@ In this reference architecture, we use cert-manager to also create **TLS certifi
 
 Now, we are configuring [Google Cloud DNS for the DNS-01 challenge](https://cert-manager.io/docs/configuration/acme/dns01/google/). For this, we need to create a secret that contains the key for the DNS service account:
 
-```
+```bash
 CLOUD_DNS_SECRET=clouddns-dns01-solver
 kubectl create secret generic "${CLOUD_DNS_SECRET}" \\
     --namespace=cert-manager \\
@@ -222,7 +227,7 @@ kubectl create secret generic "${CLOUD_DNS_SECRET}" \\
 
 After that, we are telling cert-manager which service account it should use:
 
-```
+```bash
 kubectl annotate serviceaccount --namespace=cert-manager cert-manager \\
     --overwrite "iam.gke.io/gcp-service-account=${DNS_SA_EMAIL}"
 ```
@@ -249,7 +254,7 @@ spec:
 
 … and run:
 
-```
+```bash
 kubectl apply -f issuer.yaml
 ```
 

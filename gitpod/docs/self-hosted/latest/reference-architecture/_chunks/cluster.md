@@ -40,7 +40,7 @@ At first, we [create a **service account**](https://cloud.google.com/iam/docs/cr
 
 Run the following commands to create the service account:
 
-```
+```bash
 GKE_SA=gitpod-gke
 GKE_SA_EMAIL="${GKE_SA}"@"${PROJECT_NAME}".iam.gserviceaccount.com
 gcloud iam service-accounts create "${GKE_SA}" --display-name "${GKE_SA}"
@@ -67,7 +67,7 @@ After that, we [create a **Kubernetes cluster**](https://cloud.google.com/kubern
 | Addons                    | HorizontalPodAutoscaling,<br/>NodeLocalDNS,<br/>NetworkPolicy                                               |
 | Region                    | Choose your [region and zones](https://cloud.google.com/compute/docs/regions-zones)                         |
 
-```
+```bash
 CLUSTER_NAME=gitpod
 REGION=us-central1
 GKE_VERSION=1.21.11-gke.900
@@ -100,7 +100,7 @@ Unfortunately, you cannot create a cluster without the default node pool. Since 
 
 <!-- Can we re-use the default node pool instead? → https://github.com/gitpod-io/website/pull/2106#discussion_r893885815 -->
 
-```
+```bash
 gcloud --quiet container node-pools delete default-pool \\
     --cluster="${CLUSTER_NAME}" --region="${REGION}"
 ```
@@ -122,7 +122,7 @@ Now, we are [creating a **node pool**](https://cloud.google.com/kubernetes-engin
 | Region            | Choose your [region and zones](https://cloud.google.com/compute/docs/regions-zones) |
 | Node Labels       | `gitpod.io/workload_meta=true`,<br/>`gitpod.io/workload_ide=true`                   |
 
-```
+```bash
 gcloud container node-pools \\
     create "workload-services" \\
     --cluster="${CLUSTER_NAME}" \\
@@ -160,7 +160,7 @@ We are also creating a **node pool for the Gitpod workspaces**.
 | Region            | Choose your [region and zones](https://cloud.google.com/compute/docs/regions-zones)                                                             |
 | Node Labels       | `gitpod.io/workload_workspace_services=true`,<br/>`gitpod.io/workload_workspace_regular=true`,<br/>`gitpod.io/workload_workspace_headless=true` |
 
-```
+```bash
 gcloud container node-pools \\
     create "workload-workspaces" \\
     --cluster="${CLUSTER_NAME}" \\
@@ -183,13 +183,13 @@ gcloud container node-pools \\
 
 Now, you can **connect `kubectl`** to your newly created cluster.
 
-```
+```bash
 gcloud container clusters get-credentials --region="${REGION}" "${CLUSTER_NAME}"
 ```
 
 After that, you need to create cluster role bindings to allow the current user to create new RBAC rules.
 
-```
+```bash
 kubectl create clusterrolebinding cluster-admin-binding \\
     --clusterrole=cluster-admin \\
     --user="$(gcloud config get-value core/account)"
@@ -211,11 +211,12 @@ Provided below is a complete `eksctl` configuration file that will deploy all th
 
 `eksctl` will be configuring the VPC and networking along with creating the EKS cluster itself, if you need to use pre-existing networking provisioned by another team or department, refer to the [custom VPC documentation](https://eksctl.io/usage/vpc-networking/#use-existing-vpc-other-custom-configuration).
 
-**Note on AMI Usage**
+<details>
+  <summary  class="text-p-medium">Note on AMI Usage</summary>
 
-In this reference example, the Ubuntu2004 AMI family is used instead of listing a specific AMI ID. This is for portability of the reference document and allows for the use of the built-in bootstrap command instead of having to create a custom one. If you want to do more customization of your bootstrap command or use a static AMI, first, replace `amiFamily: Ubuntu2004` with `ami: ami-customid` where `ami-customid` is from Ubuntu's EKS AMI list or the output from the below command. You will then replace `preBootstrapCommands` with your bootstrap script under a new section labelled `overrideBootstrapCommand`.
+In this reference example, the Ubuntu2004 AMI family is used instead of listing a specific AMI ID. This simplifies portability and allows for the use of the built-in bootstrap command instead of having to create a custom one. If you want to do more customization of your bootstrap command or use a static AMI, first, replace `amiFamily: Ubuntu2004` with `ami: ami-customid` where `ami-customid` is from Ubuntu's EKS AMI list or the output from the below command. You will then replace `preBootstrapCommands` with your bootstrap script under a new section labeled `overrideBootstrapCommand`.
 
-```
+```bash
 aws ec2 describe-images --owners 099720109477 \\
     --filters 'Name=name,Values=ubuntu-eks/k8s_1.22/images/*' \\
     --query 'sort_by(Images,&CreationDate)[-1].ImageId' \\
@@ -224,6 +225,10 @@ aws ec2 describe-images --owners 099720109477 \\
 ```
 
 Refer to `eksctl`'s documentation on [AMI Family](https://eksctl.io/usage/custom-ami-support/) for more information on its behavior.
+
+</details>
+
+<br/>
 
 **`gitpod-cluster.yaml`**
 
@@ -378,8 +383,13 @@ To ensure there are enough IPs and networking policy enforcement is in place, th
 
 First: Run `eksctl` with the `--without-nodegroup` flag to provision just the control plane defined in the `gitpod-cluster.yaml`:
 
-```
+```bash
 eksctl create cluster --without-nodegroup --config-file gitpod-cluster.yaml
+```
+
+This should result in the following output:
+
+```bash
 2022-06-24 09:54:59 [ℹ]  eksctl version 0.102.0-dev+3229f126.2022-06-17T12:44:20Z
 2022-06-24 09:54:59 [ℹ]  using region eu-west-1
 2022-06-24 09:54:59 [ℹ]  setting availability zones to [eu-west-1c eu-west-1a eu-west-1b]
@@ -387,14 +397,19 @@ eksctl create cluster --without-nodegroup --config-file gitpod-cluster.yaml
 2022-06-24 09:54:59 [ℹ]  subnets for eu-west-1a - public:192.168.32.0/19 private:192.168.128.0/19
 2022-06-24 09:54:59 [ℹ]  subnets for eu-west-1b - public:192.168.64.0/19 private:192.168.160.0/19
 2022-06-24 09:54:59 [ℹ]  using Kubernetes version 1.22
-...
+[...]
 2022-06-24 10:11:30 [✔]  EKS cluster "gitpod" in "eu-west-1" region is ready
 ```
 
-After this command finishes, check that `eksctl` also created the kubeconfig properly by running the command `kubectl get pods -n kube-system`. If deployed correctly one should see the a list of pods in a pending state.
+After this command finishes, check that `eksctl` also created the kubeconfig properly by running the command `kubectl get pods -n kube-system`. If deployed correctly one should see the list of pods in a pending state.
 
-```
+```bash
 kubectl get pods -n kube-system
+```
+
+This should result in:
+
+```bash
 NAME                       READY   STATUS    RESTARTS   AGE
 coredns-5947f47f5f-69lvv   0/1     Pending   0          26m
 coredns-5947f47f5f-srm5t   0/1     Pending   0          26m
@@ -406,19 +421,19 @@ This is following the instructions provided by [Tigera](https://projectcalico.do
 
 To install Calico, first remove the default AWS provided networking component:
 
-```
+```bash
 kubectl delete daemonset -n kube-system aws-node
 ```
 
 Install the Calico manifest:
 
-```
+```bash
 kubectl apply -f https://projectcalico.docs.tigera.io/manifests/calico-vxlan.yaml
 ```
 
 Now configure Calico for EKS specific support with the following command:
 
-```
+```bash
 kubectl -n kube-system set env daemonset/calico-node FELIX_AWSSRCDSTCHECK=Disable
 ```
 
@@ -428,7 +443,7 @@ To use RDS in the VPC you will need security groups created and associated with 
 
 First get the ID of the cluster `eksctl` just created. If you kept the tag `project=gitpod` in the `gitpod-cluster.yaml` file, retrieve the id and cidr block with:
 
-```
+```bash
 aws ec2 describe-vpcs --filters "Name=tag:project,Values=gitpod" --query 'Vpcs[*].[VpcId, CidrBlock]'
 [
     [
@@ -438,12 +453,16 @@ aws ec2 describe-vpcs --filters "Name=tag:project,Values=gitpod" --query 'Vpcs[*
 ]
 ```
 
-Create the new security group (we do not rules added to it yet) using the vpc-id from above, note how tags are auto populated to the security group as well:
+Create the new security group (we do not rules added to it yet) using the vpc-id from above, note how tags are auto-populated to the security group as well:
 
-```
+```bash
 aws ec2 create-security-group --description 'Gitpod Services Nodegroup' --group-name 'gitpod-services' \
 --vpc-id vpc-09a109f23dad0a298 --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=gitpod-services-sg},{Key=project,Value=gitpod},{Key=team,Value=cs}]'
+```
 
+This should return something similar to:
+
+```bash
 {
     "GroupId": "sg-04b9a5f403307efe5",
     "Tags": [
@@ -478,14 +497,19 @@ To ensure that if there are problems deploying the services nodegroup (you provi
 
 Create the services nodegroups with `eksctl create nodegroup --include=services --config-file gitpod-cluster.yaml`:
 
-```
+```bash
 eksctl create nodegroup --include=services --config-file gitpod-cluster.yaml
+```
+
+This should result in:
+
+```bash
 2022-06-24 13:42:01 [ℹ]  nodegroup "services" will use "ami-0793b4124359a6ad7" [Ubuntu2004/1.22]
 2022-06-24 13:42:01 [ℹ]  nodegroup "workspaces" will use "ami-0793b4124359a6ad7" [Ubuntu2004/1.22]
 2022-06-24 13:42:03 [ℹ]  combined include rules: services
 2022-06-24 13:42:03 [ℹ]  1 nodegroup (services) was included (based on the include/exclude rules)
 2022-06-24 13:42:03 [ℹ]  will create a CloudFormation stack for each of 1 managed nodegroups in cluster "gitpod"
-...
+[...]
 2022-06-24 13:46:22 [✔]  created 1 managed nodegroup(s) in cluster "gitpod"
 2022-06-24 13:46:24 [ℹ]  checking security group configuration for all nodegroups
 2022-06-24 13:46:24 [ℹ]  all nodegroups have up-to-date cloudformation templates
@@ -493,15 +517,18 @@ eksctl create nodegroup --include=services --config-file gitpod-cluster.yaml
 
 Create the workspaces nodegroup second if the services are deployed correctly.
 
-```
+```bash
 eksctl create nodegroup --include=workspaces --config-file gitpod-cluster.yaml
+```
+
+```bash
 2022-06-24 13:55:08 [ℹ]  nodegroup "services" will use "ami-0793b4124359a6ad7" [Ubuntu2004/1.22]
 2022-06-24 13:55:08 [ℹ]  nodegroup "workspaces" will use "ami-0793b4124359a6ad7" [Ubuntu2004/1.22]
 2022-06-24 13:55:13 [ℹ]  1 existing nodegroup(s) (services) will be excluded
 2022-06-24 13:55:13 [ℹ]  combined include rules: workspaces
 2022-06-24 13:55:13 [ℹ]  1 nodegroup (workspaces) was included (based on the include/exclude rules)
 2022-06-24 13:55:13 [ℹ]  will create a CloudFormation stack for each of 1 managed nodegroups in cluster "gitpod"
-...
+[...]
 2022-06-24 13:59:10 [✔]  created 1 managed nodegroup(s) in cluster "gitpod"
 2022-06-24 13:59:13 [ℹ]  checking security group configuration for all nodegroups
 2022-06-24 13:59:13 [ℹ]  all nodegroups have up-to-date cloudformation templates
@@ -509,7 +536,7 @@ eksctl create nodegroup --include=workspaces --config-file gitpod-cluster.yaml
 
 You can verify that your installation was deployed properly with the custom `kubectl` command provided below which will let you review maxpods, kernel and containerd versions to ensure they are meeting [our minimum requirements](../../latest/cluster-set-up) as intended.
 
-```
+```bash
 kubectl get nodes -o=custom-columns="NAME:.metadata.name,\
 RUNTIME:.status.nodeInfo.containerRuntimeVersion,\
 MAXPODS:.status.capacity.pods,\
@@ -521,7 +548,7 @@ Instance-ID:.spec.providerID"
 
 Because of how EKS launches instances, coredns may end up running on a single node, which is against best practices. Before continuing to the next steps, restart coredns to ensure it is running on two nodes.
 
-```
+```bash
 kubectl rollout restart deployment.apps/coredns -n kube-system
 ```
 
@@ -537,9 +564,9 @@ The order resources to delete if created:
 - Services security group
 - eksctl delete cluster
 
-Full removal of these installed components would look something like this:
+Full removal of these installed components would look something like this (commands are grouped together for brevity):
 
-```
+```bash
 #### delete RDS resources
 aws rds delete-db-instance --db-instance-identifier gitpod-instance --skip-final-snapshot --delete-automated-backups
 aws ec2 delete-security-group --group-id sg-0e538ccac25bb1387

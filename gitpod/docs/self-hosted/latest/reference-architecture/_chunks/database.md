@@ -32,7 +32,7 @@ gcloud sql instances patch "${MYSQL_INSTANCE_NAME}" --database-flags \\
 
 After that, we create the database named `gitpod` as well as a dedicated Gitpod database user with a random password.
 
-```
+```bash
 gcloud sql databases create gitpod --instance="${MYSQL_INSTANCE_NAME}"
 
 MYSQL_GITPOD_USERNAME=gitpod
@@ -44,7 +44,7 @@ gcloud sql users create "${MYSQL_GITPOD_USERNAME}" \\
 
 Finally, you need to create a service account that has the `roles/cloudsql.client` role:
 
-```
+```bash
 MYSQL_SA=gitpod-mysql
 MYSQL_SA_EMAIL="${MYSQL_SA}"@"${PROJECT_NAME}".iam.gserviceaccount.com
 gcloud iam service-accounts create "${MYSQL_SA}" --display-name "${MYSQL_SA}"
@@ -54,7 +54,7 @@ gcloud projects add-iam-policy-binding "${PROJECT_NAME}" \\
 
 Save the service account key to the file `./mysql-credentials.json`:
 
-```
+```bash
 gcloud iam service-accounts keys create --iam-account "${MYSQL_SA_EMAIL}" \\
     ./mysql-credentials.json
 ```
@@ -68,7 +68,7 @@ We will create an RDS MySQL `db.m5g.large` instance running MySQL 5.7. Before de
 
 First find the subnet IDs for the public subnets in your environment. For deploying RDS in private subnets replace true with false in the below command:
 
-```
+```bash
 aws ec2 describe-subnets \\
     --filters "Name=tag:project,Values=gitpod" \\
     --query 'Subnets[?MapPublicIpOnLaunch==`true`] | [*].[SubnetId, AvailabilityZone, CidrBlock, MapPublicIpOnLaunch]'
@@ -76,7 +76,7 @@ aws ec2 describe-subnets \\
 
 This should give you an output similar to the following:
 
-```
+```bash
 [
     [
         "subnet-0686443f3f2782453",
@@ -101,7 +101,7 @@ This should give you an output similar to the following:
 
 Using the three subnet IDs, create an RDS subnet group, with the name `gitpod-rds`:
 
-```
+```bash
 aws rds create-db-subnet-group \\
     --db-subnet-group-name gitpod-rds \\
     --db-subnet-group-description "Subnet for the Gitpod RDS deployment in VPC" \\
@@ -115,7 +115,11 @@ Now you will need to create a security group for the RDS instance, running a sim
 aws ec2 create-security-group --description 'Gitpod RDS' --group-name 'gitpod-rds' \\
     --vpc-id vpc-09a109f23dad0a298 \\
     --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=gitpod-rds-sg},{Key=project,Value=gitpod},{Key=team,Value=cs}]'
+```
 
+This should return an output that is similar to:
+
+```bash
 {
     "GroupId": "sg-0e538ccac25bb1387",
     "Tags": [
@@ -133,7 +137,7 @@ aws ec2 create-security-group --description 'Gitpod RDS' --group-name 'gitpod-rd
 
 You can now update the ingress policy for the RDS group to allow for incoming connections from the Services nodegroup on port 3306, the MySQL port:
 
-```
+```bash
 aws ec2 authorize-security-group-ingress \
     --group-id sg-0e538ccac25bb1387 \
     --protocol tcp --port 3306 \
@@ -143,15 +147,14 @@ aws ec2 authorize-security-group-ingress \
 
 Now you can create a password to use for MySQL. This will be required for the creation of the RDS instance and later for use by the Gitpod installer:
 
-```
-
+```bash
 export MYSQL_GITPOD_PW=$(openssl rand -hex 18)
 echo $MYSQL_GITPOD_PW
 ```
 
 Now you can create the [Multi-AZ RDS instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html) using the MySQL password, the security group, and RDS subnet you created in the previous steps:
 
-```
+```bash
 aws rds create-db-instance \
     --db-name gitpod \
     --db-instance-identifier gitpod-instance \
@@ -170,7 +173,7 @@ aws rds create-db-instance \
 
 This should return an output similar to the following:
 
-```
+```bash
 {
     "DBInstance": {
         "DBInstanceIdentifier": "gitpod-instance",
@@ -187,12 +190,17 @@ This should return an output similar to the following:
 [...]
 ```
 
-To check whether instance creation has compeleted, and to retrieve the URL to use, run this command:
+To check whether instance creation compeleted, and to retrieve the URL to use, run this command:
 
-```
+```bash
 aws rds describe-db-instances \
     --db-instance-identifier gitpod-instance \
     --query 'DBInstances[0].[DBInstanceStatus,Endpoint.Address]'
+```
+
+Returning:
+
+```bash
 [
     "modifying",
     "gitpod-instance.coynfywwqpjg.eu-west-1.rds.amazonaws.com"

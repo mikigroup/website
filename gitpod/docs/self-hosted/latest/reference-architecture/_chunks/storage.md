@@ -20,7 +20,7 @@ For each Gitpod user, their own bucket will be created at runtime. For this reas
 | roles/storage.admin       |
 | roles/storage.objectAdmin |
 
-```
+```bash
 OBJECT_STORAGE_SA=gitpod-storage
 OBJECT_STORAGE_SA_EMAIL="${OBJECT_STORAGE_SA}"@"${PROJECT_NAME}".iam.gserviceaccount.com
 gcloud iam service-accounts create "${OBJECT_STORAGE_SA}" --display-name "${OBJECT_STORAGE_SA}"
@@ -32,7 +32,7 @@ gcloud projects add-iam-policy-binding "${PROJECT_NAME}" \\
 
 Save the service account key to the file `./gs-credentials.json`:
 
-```
+```bash
 gcloud iam service-accounts keys create --iam-account "${OBJECT_STORAGE_SA_EMAIL}" \\
     ./gs-credentials.json
 ```
@@ -42,14 +42,14 @@ gcloud iam service-accounts keys create --iam-account "${OBJECT_STORAGE_SA_EMAIL
 
 In this deployment we create one S3 bucket and one IAM User service account to access it. These credentials and bucket are used for both object storage and storing the workspace images via a Registry frontend deployed in Gitpod. The bucket has to have a globally unique name.
 
-```
+```bash
 export S3_BUCKET_NAME="suitably-tired-puma-registry"
 echo $S3_BUCKET_NAME
 ```
 
 ### Create the S3 Bucket and ensure it is private
 
-```
+```bash
 aws s3api create-bucket \\
     --bucket $S3_BUCKET_NAME \\
     --region eu-west-1 --create-bucket-configuration LocationConstraint=eu-west-1 \\
@@ -61,7 +61,7 @@ aws s3api put-public-access-block \\
 
 ### Create an IAM user for credentials with access just to this bucket
 
-```
+```bash
 aws iam create-user \\
   --user-name gitpod-s3-access \\
   --tags Key=project,Value=gitpod
@@ -101,12 +101,16 @@ Save the following file as `S3_policy.json`, replacing the resource name with th
 
 Create the policy, taking note of the ARN in the output:
 
-```
+```bash
 aws iam create-policy \\
     --policy-name gitpod_s3_access_policy \\
     --policy-document file://S3_policy.json \
     --tags Key=project,Value=gitpod
+```
 
+This should result in the following output:
+
+```bash
 {
     "Policy": {
         "PolicyName": "gitpod_s3_access_policy",
@@ -131,7 +135,7 @@ aws iam create-policy \\
 
 Attach the policy to the IAM user you just created:
 
-```
+```bash
 aws iam attach-user-policy \\
     --user-name gitpod-s3-access \\
     --policy-arn 'arn:aws:iam::691173103445:policy/gitpod_s3_access_policy'
@@ -141,13 +145,13 @@ aws iam attach-user-policy \\
 
 Be prepared to store the `AccessKeyId` and `SecretAccessKey` securely once you execute the following command:
 
-```
+```bash
 aws iam create-access-key --user-name gitpod-s3-access
 ```
 
 This should result in an output similar to the following:
 
-```
+```bash
 {
     "AccessKey": {
         "UserName": "gitpod-s3-access",
