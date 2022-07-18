@@ -141,7 +141,7 @@ You can now update the ingress policy for the RDS group to allow for incoming co
 aws ec2 authorize-security-group-ingress \
     --group-id sg-0e538ccac25bb1387 \
     --protocol tcp --port 3306 \
-    --source-group sg-04b9a5f403307efe5 \
+    --source-group <services nodegroup securitygroup ID> \
     --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=rds-access},{Key=project,Value=gitpod},{Key=department,Value=demo}]'
 ```
 
