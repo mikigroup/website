@@ -13,7 +13,7 @@ In this reference architecture, we use the managed databases by the cloud provid
 <CloudPlatformToggle id="cloud-platform-toggle-database">
 <div slot="gcp">
 
-As relational database, we create a [Google Cloud SQL instance](https://cloud.google.com/sql) with MySQL 5.7. Use the following commands to create the database instance:
+As a relational database, we create a [Google Cloud SQL instance](https://cloud.google.com/sql) with MySQL 5.7. Use the following commands to create the database instance:
 
 ```
 MYSQL_INSTANCE_NAME=gitpod-mysql
@@ -64,9 +64,9 @@ gcloud iam service-accounts keys create --iam-account "${MYSQL_SA_EMAIL}" \\
 
 We will create an RDS MySQL `db.m5g.large` instance running MySQL 5.7. Before deploying an RDS instance, additional configuration has to be done to the VPC created by the `eksctl` command:
 
-### Create a RDS security group
+### Create an RDS security group
 
-First find the subnet IDs for the public subnets in your environment. For deploying RDS in private subnets replace true with false in the below command:
+First, find the subnet IDs for the public subnets in your environment. For deploying RDS in private subnets replace true with false in the below command:
 
 ```bash
 aws ec2 describe-subnets \\
@@ -190,7 +190,7 @@ This should return an output similar to the following:
 [...]
 ```
 
-To check whether instance creation compeleted, and to retrieve the URL to use, run this command:
+To check whether instance creation has compeleted, and to retrieve the URL to use, run this command:
 
 ```bash
 aws rds describe-db-instances \
