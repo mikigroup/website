@@ -241,7 +241,7 @@ metadata:
   version: "1.22"
   # update tags to ensure all generated resources have atleast these tags applied
   tags:
-    department: cs
+    department: demo
     project: gitpod
 
 iam:
