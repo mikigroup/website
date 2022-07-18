@@ -445,6 +445,11 @@ First get the ID of the cluster `eksctl` just created. If you kept the tag `proj
 
 ```bash
 aws ec2 describe-vpcs --filters "Name=tag:project,Values=gitpod" --query 'Vpcs[*].[VpcId, CidrBlock]'
+```
+
+This should result in:
+
+```bash
 [
     [
         "vpc-09a109f23dad0a298",
@@ -564,7 +569,7 @@ The order resources to delete if created:
 - Services security group
 - eksctl delete cluster
 
-Full removal of these installed components would look something like this (commands are grouped together for brevity):
+Full removal of these installed components would look something like this (commands are grouped for brevity):
 
 ```bash
 #### delete RDS resources

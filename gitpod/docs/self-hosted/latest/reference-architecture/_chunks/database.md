@@ -111,7 +111,7 @@ aws rds create-db-subnet-group \\
 
 Now you will need to create a security group for the RDS instance, running a similar command as before:
 
-```
+```bash
 aws ec2 create-security-group --description 'Gitpod RDS' --group-name 'gitpod-rds' \\
     --vpc-id vpc-09a109f23dad0a298 \\
     --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=gitpod-rds-sg},{Key=project,Value=gitpod},{Key=department,Value=demo}]'
