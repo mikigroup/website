@@ -471,8 +471,8 @@ This should return something similar to:
             "Value": "gitpod"
         },
         {
-            "Key": "team",
-            "Value": "cs"
+            "Key": "department",
+            "Value": "demo"
         }
     ]
 }

@@ -128,8 +128,8 @@ This should return an output that is similar to:
             "Value": "gitpod"
         },
         {
-            "Key": "team",
-            "Value": "cs"
+            "Key": "department",
+            "Value": "demo"
         }
     ]
 }
