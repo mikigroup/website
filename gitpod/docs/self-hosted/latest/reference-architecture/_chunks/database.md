@@ -114,7 +114,7 @@ Now you will need to create a security group for the RDS instance, running a sim
 ```
 aws ec2 create-security-group --description 'Gitpod RDS' --group-name 'gitpod-rds' \\
     --vpc-id vpc-09a109f23dad0a298 \\
-    --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=gitpod-rds-sg},{Key=project,Value=gitpod},{Key=team,Value=cs}]'
+    --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=gitpod-rds-sg},{Key=project,Value=gitpod},{Key=department,Value=demo}]'
 ```
 
 This should return an output that is similar to:
