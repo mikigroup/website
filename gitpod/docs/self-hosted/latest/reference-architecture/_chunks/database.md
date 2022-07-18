@@ -168,7 +168,7 @@ aws rds create-db-instance \
     --master-username gitpod \
     --master-user-password $MYSQL_GITPOD_PW \
     --engine-version 5.7 \
-    --tags Key=project,Value=gitpod Key=Name,Value=Gitpod-MySQLDB
+    --tags Key=project,Value=gitpod Key=Name,Value=Gitpod-MySQLDB,Key=department,Value=demo
 ```
 
 This should return an output similar to the following:
