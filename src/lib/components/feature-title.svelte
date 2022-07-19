@@ -9,13 +9,17 @@
 
 <Card
   size="small"
-  class="w-[270px] sm:w-[296px] {featureTitlePadding} text-center"
+  class="w-full sm:w-[296px] {featureTitlePadding} text-center"
 >
   <h2 class="h2 !mb-0">
     <div class={swap ? "text-medium font-normal text-body" : ""}>
       {main}
     </div>
-    <div class="{!swap ? 'text-medium font-normal text-body' : ''} mt-micro">
+    <div
+      class="{!swap
+        ? 'text-medium font-normal text-body'
+        : ''} mt-macro sm:mt-micro"
+    >
       {sub}
     </div>
   </h2>

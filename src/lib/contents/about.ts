@@ -22,16 +22,16 @@ export const featureTitles: FeatureTitle[] = [
 
 export const imagesTop: Image[] = [
   {
-    src: "/images/about/1.png",
-    alt: "Gitpod team memebers smiling.",
+    src: "/images/about/3.jpg",
+    alt: "Gitpod team members taking a selfie.",
   },
   {
     src: "/images/about/2.png",
     alt: "Gitpod team members sitting near the sea.",
   },
   {
-    src: "/images/about/3.jpg",
-    alt: "Gitpod team members taking a selfie.",
+    src: "/images/about/1.png",
+    alt: "Gitpod team memebers smiling.",
   },
   {
     src: "/images/about/4.png",

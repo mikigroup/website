@@ -47,7 +47,6 @@
     >
       Gitpod’s Direction
     </LinkIconExternal>
-
     <Quote />
   </div>
 </Header>

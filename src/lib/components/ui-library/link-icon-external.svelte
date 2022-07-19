@@ -20,21 +20,17 @@
       filter: invert(80%) grayscale(80%);
       @apply transition-all duration-200;
     }
-
-    &:hover img {
-      filter: none;
-    }
   }
 </style>
 
 <a
-  class="link-icon-external inline-flex px-4 text-center leading-4 rounded-xl shadow-light dark:shadow-none font-semibold {variant ===
+  class="link-icon-external inline-flex px-4 text-center leading-4 shadow-light dark:shadow-none font-semibold {variant ===
   'white'
     ? 'bg-card'
-    : 'bg-sand-dark dark:bg-light-black'} hover:bg-tertiary focus:bg-tertiary dark:hover:bg-quaternary dark:hover:text-black {size ===
+    : 'bg-sand-dark dark:bg-light-black'} hover:bg-white focus:bg-tertiary dark:hover:bg-light-black-hover {size ===
   'small'
-    ? 'py-2 text-btn-small'
-    : 'py-2.5 text-xl'}"
+    ? 'py-2 text-btn-small rounded-xl'
+    : 'py-4 text-xl rounded-2xl'}"
   {href}
   target="_blank"
   rel="noopener"

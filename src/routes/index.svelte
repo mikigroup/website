@@ -48,7 +48,10 @@
 <Hero />
 <AnimatedLogos />
 <Section>
-  <FeatureTitles {featureTitles} featureTitlePadding="px-small py-x-small" />
+  <FeatureTitles
+    {featureTitles}
+    featureTitlePadding="px-macro py-xx-small sm:px-small sm:py-x-small"
+  />
 </Section>
 <ChooseProject />
 <div id="choose-project-observer-target-bottom">
