@@ -1,8 +1,7 @@
-import type { Handler } from "@netlify/functions";
+import type { RequestHandler } from "@sveltejs/kit";
 import * as client from "@sendgrid/mail";
-import save from "src/functions/feedback/_save-to-spreadsheet";
-
-export type EmailToType = "contact" | "sales" | "community-license";
+import save from "$lib/api/save-to-spreadsheet";
+import type { Email, EmailToType } from "$lib/api/api";
 
 const determineToEmail = (toType: EmailToType = "contact") => {
   switch (toType) {
@@ -16,29 +15,6 @@ const determineToEmail = (toType: EmailToType = "contact") => {
       return "contact-test@gitpod.io";
   }
 };
-
-export interface Email {
-  to?: {
-    email: string;
-    name?: string;
-  };
-  toType?: EmailToType;
-  from?: {
-    email: string;
-    name?: string;
-  };
-  replyTo: {
-    email: string;
-    name?: string;
-  };
-  subject: string;
-  message?: string;
-  feedback?: string;
-  otherFeedback?: string;
-  data?: {
-    [key: string]: string;
-  };
-}
 
 async function sendEmail(
   client: client.MailService,
@@ -96,8 +72,10 @@ async function saveToSheet(sheetTitle: string, data: any) {
   };
 }
 
-const handler: Handler = function (event, _, callback) {
-  const email: Email = JSON.parse(event.body!) as Email;
+export const post: RequestHandler = async ({ request }) => {
+  const body = await request.json();
+  console.log(JSON.stringify(body));
+  const email: Email = body! as Email;
   const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || "no-key";
   const SENDGRID_TO_EMAIL = determineToEmail(email.toType);
   const SENDGRID_FROM_EMAIL = SENDGRID_TO_EMAIL;
@@ -118,17 +96,11 @@ const handler: Handler = function (event, _, callback) {
 
   if (!dontEmail) {
     client.setApiKey(SENDGRID_API_KEY);
-    sendEmail(client, email)
-      .then((response) =>
-        callback(null, {
-          statusCode: response.statusCode,
-          body: JSON.stringify(email) + " added",
-        })
-      )
-      .catch((err) => {
-        console.error(err);
-        callback(err, null);
-      });
+    const dontEmailResponse = await sendEmail(client, email);
+    return {
+      status: dontEmailResponse.statusCode,
+      body: JSON.stringify(email) + " added",
+    };
   }
 
   if (email.toType === "community-license") {
@@ -142,18 +114,21 @@ const handler: Handler = function (event, _, callback) {
       email.data.message,
     ];
 
-    saveToSheet("Free Self-Hosted Community License", data)
-      .then((response) =>
-        callback(null, {
-          statusCode: response.statusCode,
-          body: JSON.stringify(email) + " added",
-        })
-      )
-      .catch((err) => {
-        console.error(err);
-        callback(err, null);
-      });
+    try {
+      const saveResponse = await saveToSheet(
+        "Free Self-Hosted Community License",
+        data
+      );
+      return {
+        status: saveResponse.statusCode,
+        body: JSON.stringify(email) + " added",
+      };
+    } catch (err) {
+      console.error(err);
+      return {
+        status: 500,
+        body: err,
+      };
+    }
   }
 };
-
-export { handler };
