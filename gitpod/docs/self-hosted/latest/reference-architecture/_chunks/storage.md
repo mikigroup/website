@@ -163,7 +163,7 @@ This should result in an output similar to the following:
 }
 ```
 
-To test that this works, open a new shell session and configure it to use the `AccessKeyId` and `SecretAccessKey` you've just retrieved, and attempt to upload a file and then delete it:
+To test that this works, open a new shell session and configure it to use the `AccessKeyId` and `SecretAccessKey` you've just retrieved, and attempt to upload a file and then delete it, similar to the following:
 
 ```sh
 export AWS_ACCESS_KEY_ID=----------
@@ -178,6 +178,16 @@ aws s3 rm s3://suitably-tired-puma-registry/gitpod_test.txt
 delete: s3://suitably-tired-puma-registry/gitpod_test.txt
 aws s3 ls s3://suitably-tired-puma-registry
 *nothing returns if empty*
+```
+
+To avoid impacting any further calls to AWS, unset the environment variables created:
+
+```bash
+unset AWS_ACCESS_KEY_ID
+```
+
+```bash
+unset AWS_SECRET_ACCESS_KEY
 ```
 
 </div>
