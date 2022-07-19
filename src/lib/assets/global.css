@@ -169,6 +169,18 @@
     }
   }
 
+  .code {
+    @apply rounded-xl text-dark-grey;
+    padding: 0.3rem 0.5rem;
+    background: var(--brand-light);
+    white-space: break-spaces;
+    overflow-wrap: break-word;
+  }
+
+  .text-large .code {
+    @apply py-0;
+  }
+
   body.dark .stroked {
     &::before {
       background: linear-gradient(to bottom, #332d23, #0f0e0b);

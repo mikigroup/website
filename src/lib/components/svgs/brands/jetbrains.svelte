@@ -1,7 +1,7 @@
 <script lang="ts">
   export let isDark: boolean = false;
   export let isAQuoteLogo: boolean = false;
-  export let inActive: boolean;
+  export let inActive: boolean = undefined;
 </script>
 
 <style lang="postcss">
