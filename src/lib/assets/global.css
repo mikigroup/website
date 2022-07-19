@@ -131,6 +131,12 @@
     }
   }
 
+  .stroked-divider {
+    &::after {
+      @apply bg-divider dark:bg-card;
+    }
+  }
+
   h2,
   h3,
   h4,

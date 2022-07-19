@@ -19,6 +19,10 @@ const config = {
   extensions: [".svelte", ".md"],
 
   kit: {
+    browser: {
+      hydrate: true,
+      router: true,
+    },
     trailingSlash: "never",
     adapter: adapterNetlify({
       split: true,
@@ -32,15 +36,12 @@ const config = {
       routes: "src/routes",
       template: "src/app.html",
     },
-    hydrate: true,
     prerender: {
       crawl: true,
       enabled: true,
       onError: "fail", //once the netlify-endpoint for requesting the images isn't needed anymore this can be "fail" again
       entries: ["*"],
     },
-    router: true,
-    target: "#svelte",
     vite: {
       resolve: {
         preserveSymlinks: true,

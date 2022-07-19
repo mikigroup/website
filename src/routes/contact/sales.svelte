@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import type { Form } from "$lib/types/form.type";
-  import type { Email, EmailToType } from "../../functions/submit-form";
+  import type { Email, EmailToType } from "$lib/api/api";
   import OpenGraph from "$lib/components/open-graph.svelte";
   import SubmissionSuccess from "$lib/components/submission-success.svelte";
   import Section from "$lib/components/section.svelte";
@@ -171,7 +171,7 @@
               },
             }
           : email;
-      const response = await fetch("/.netlify/functions/submit-form", {
+      const response = await fetch("/api/submit-form", {
         method: "POST",
         body: JSON.stringify(emailToSend),
       });

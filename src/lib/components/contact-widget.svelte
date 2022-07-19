@@ -73,7 +73,7 @@
 
 <style lang="postcss">
   :global(body.consent-is-shown) .parent {
-    @apply bottom-[95px] xl:bottom-14;
+    @apply bottom-[105px] md:bottom-2;
   }
 
   .links {
@@ -121,7 +121,7 @@
 </style>
 
 <div
-  class="fixed bottom-4 right-4 flex flex-col items-end z-50 parent"
+  class="fixed bottom-2 right-2 flex flex-col items-end z-50 parent"
   data-analytics={`{"context":"contact_widget"}`}
 >
   {#if areButtonsShown}

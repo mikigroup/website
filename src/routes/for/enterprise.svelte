@@ -55,7 +55,10 @@
   }}
 />
 
-<FeatureTitles {featureTitles} featureTitlePadding="px-small py-x-small" />
+<FeatureTitles
+  {featureTitles}
+  featureTitlePadding="px-macro py-xx-small sm:px-small sm:py-x-small"
+/>
 
 <UsedBy
   class="py-small"

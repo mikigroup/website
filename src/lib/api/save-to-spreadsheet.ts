@@ -1,10 +1,5 @@
 import gs from "google-spreadsheet";
-
-interface SheetInfo {
-  sheetTitle: string;
-  data: any[];
-  type?: "signup";
-}
+import type { SheetInfo } from "./api";
 
 export default async (sheetInfo: SheetInfo): Promise<boolean | string> => {
   try {

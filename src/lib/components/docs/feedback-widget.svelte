@@ -28,7 +28,7 @@
       true
     );
 
-    const response = await fetch("/.netlify/functions/feedback", {
+    const response = await fetch("/api/feedback", {
       method: "post",
       body: JSON.stringify({
         type,

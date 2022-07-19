@@ -1,10 +1,5 @@
-import type { Response } from "@netlify/functions/src/function/response";
-import saveEmailInSheet from "../feedback/_save-to-spreadsheet";
-
-interface SignupData {
-  type: "newsletter" | "ambassador program" | "blog-email";
-  email: string;
-}
+import saveEmailInSheet from "$lib/api/save-to-spreadsheet";
+import type { SignupData } from "./api";
 
 const signupTypeToSheetTitle = {
   newsletter: "Newsletter - Signups",
@@ -12,12 +7,11 @@ const signupTypeToSheetTitle = {
   "blog-email": "Gitpod OS - Signups",
 };
 
-export const signup = async (body: string): Promise<Response> => {
-  const data: SignupData = JSON.parse(body) as SignupData;
-  console.log(data);
+export const signup = async (body: SignupData) => {
+  console.log(body);
   const isSavedInSheet = await saveEmailInSheet({
-    sheetTitle: signupTypeToSheetTitle[data.type],
-    data: [data.email],
+    sheetTitle: signupTypeToSheetTitle[body.type],
+    data: [body.email],
     type: "signup",
   });
 

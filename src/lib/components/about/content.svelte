@@ -12,7 +12,7 @@
 
 <style lang="postcss">
   h2.h3 {
-    @apply mt-huge mb-xx-small;
+    @apply mt-huge lg:mt-44 mb-xx-small;
   }
 
   p {
@@ -75,7 +75,7 @@
 
     <FindOutMore />
 
-    <h2 class="h3">Backed by great investors.</h2>
+    <h2 class="h3">Backed by great investors</h2>
 
     <p class="text-large">
       Gitpod Inc. was founded in 2020 and in early 2021 we raised over $13m from
@@ -98,7 +98,9 @@
     </div>
 
     <h2 class="h3">
-      Collaboration with strong partners like GitLab, JetBrains & Tailscale
+      Collaboration with strong partners like GitLab,<br
+        class="hidden md:block"
+      /> JetBrains & Tailscale
     </h2>
     <p>
       We are strong believers in creating better-together partnerships.
