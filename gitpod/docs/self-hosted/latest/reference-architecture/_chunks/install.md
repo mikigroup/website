@@ -60,7 +60,7 @@ Keep cert-manager selected for the TLS certificates options.
 
 <div slot="aws">
 
-If you followed the steps to create your infrastructure on GCP of this guide, you need to use the following config settings for your Gitpod installation:
+If you followed the steps to create your infrastructure on the AWS portion of this guide, you need to use the following config settings for your Gitpod installation:
 
 | General Settings |                         |
 | ---------------- | ----------------------- |
