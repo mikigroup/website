@@ -74,7 +74,6 @@ async function saveToSheet(sheetTitle: string, data: any) {
 
 export const post: RequestHandler = async ({ request }) => {
   const body = await request.json();
-  console.log(JSON.stringify(body));
   const email: Email = body! as Email;
   const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || "no-key";
   const SENDGRID_TO_EMAIL = determineToEmail(email.toType);
@@ -94,7 +93,7 @@ export const post: RequestHandler = async ({ request }) => {
       ? email.data.noOfEngineers === "1-10"
       : false;
 
-  if (!dontEmail) {
+  if (!dontEmail && email.toType !== "webinar-registeration") {
     client.setApiKey(SENDGRID_API_KEY);
     const dontEmailResponse = await sendEmail(client, email);
     return {
@@ -125,6 +124,28 @@ export const post: RequestHandler = async ({ request }) => {
       };
     } catch (err) {
       console.error(err);
+      return {
+        status: 500,
+        body: err,
+      };
+    }
+  } else if (email.toType === "webinar-registeration") {
+    const data = [
+      new Date(),
+      email.data.name,
+      email.data.email,
+      email.data.company,
+    ];
+
+    try {
+      const saveResponse = await saveToSheet("Webinar registrations", data);
+      return {
+        status: saveResponse.statusCode,
+        body: JSON.stringify(email) + " added",
+      };
+    } catch (err) {
+      console.error(err);
+      console.log(err);
       return {
         status: 500,
         body: err,

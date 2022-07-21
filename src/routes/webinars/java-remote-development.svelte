@@ -8,6 +8,7 @@
   import InThisWebinar from "$lib/components/webinars/in-this-webinar.svelte";
   import Layout from "$lib/components/webinars/layout.svelte";
   import OrganizedBy from "$lib/components/webinars/organized-by.svelte";
+  import Register from "$lib/components/webinars/register.svelte";
   import { hosts } from "$lib/contents/webinars/remote-development";
 </script>
 
@@ -20,23 +21,27 @@
   }}
 />
 
-<Layout>
-  <Header />
-  <InThisWebinar>
-    <svelte:fragment slot="list-items">
-      <li>Why remote development can save you hours of work every week</li>
-      <li>
-        How to use Gitpod remote dev environments with the IntelliJ IDE that
-        runs on your computer (Demo)
-      </li>
-    </svelte:fragment>
-  </InThisWebinar>
-  <Hosts {hosts} />
-  <OrganizedBy>
-    <img src="/images/gitpod-logo.svg" alt="Gitpod" class="h-10 w-10" />
-    <Jetbrains isDark={true} class="h-10 w-10" />
-  </OrganizedBy>
-</Layout>
+<div class="flex items-start">
+  <Layout>
+    <Header />
+    <Register class="lgx:hidden" />
+    <InThisWebinar>
+      <svelte:fragment slot="list-items">
+        <li>Why remote development can save you hours of work every week</li>
+        <li>
+          How to use Gitpod remote dev environments with the IntelliJ IDE that
+          runs on your computer (Demo)
+        </li>
+      </svelte:fragment>
+    </InThisWebinar>
+    <Hosts {hosts} />
+    <OrganizedBy>
+      <img src="/images/gitpod-logo.svg" alt="Gitpod" class="h-10 w-10" />
+      <Jetbrains isDark={true} class="h-10 w-10" />
+    </OrganizedBy>
+  </Layout>
+  <Register class="hidden lgx:block" />
+</div>
 
 <Articles
   title="Additional resources"

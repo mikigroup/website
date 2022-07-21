@@ -420,7 +420,8 @@
                 variant="cta"
                 size="medium"
                 type="submit"
-                disabled={isFormDirty && !isFormValid}
+                disabled={(isFormDirty && !isFormValid) ||
+                  isSubmissionInProgress}
                 isLoading={isSubmissionInProgress}
               >
                 {#if toType === "community-license"}

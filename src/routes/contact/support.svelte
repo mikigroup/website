@@ -360,7 +360,7 @@
               <InputsHalf>
                 <div class:error={isFormDirty && !formData.company.valid}>
                   <Input
-                    label="Company"
+                    label="Company*"
                     hasError={isFormDirty && !formData.company.valid}
                     id="company"
                     name="company"

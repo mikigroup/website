@@ -1,3 +1,8 @@
+<script lang="ts">
+  let className: string = "";
+  export { className as class };
+</script>
+
 <style lang="postcss">
   div {
     @apply sm:flex sm:justify-between;

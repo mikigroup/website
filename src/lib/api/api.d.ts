@@ -8,11 +8,11 @@ export declare interface Email {
     email: string;
     name?: string;
   };
-  replyTo: {
+  replyTo?: {
     email: string;
     name?: string;
   };
-  subject: string;
+  subject?: string;
   message?: string;
   feedback?: string;
   otherFeedback?: string;
@@ -45,4 +45,8 @@ export declare interface ExtensionFeedback {
   note?: string;
 }
 
-export type EmailToType = "contact" | "sales" | "community-license";
+export type EmailToType =
+  | "contact"
+  | "sales"
+  | "community-license"
+  | "webinar-registeration";

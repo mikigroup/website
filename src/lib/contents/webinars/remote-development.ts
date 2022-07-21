@@ -29,6 +29,6 @@ export const hosts: Host[] = [
         class: "h-8 w-8",
       },
     },
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+    text: "Matt Ellis is a developer advocate at JetBrains, working with lots of different IDEs and technologies such as the Unity and Unreal Engine game development tools in Rider, Code With Me for collaborative editing and remote development with JetBrains Gateway.",
   },
 ];
