@@ -22,7 +22,7 @@
     noOfEngineers as noOfEngineersArray,
   } from "$lib/contents/contact";
   import Select from "$lib/components/ui-library/select/select.svelte";
-  import InputsHalf from "./inputs-half.svelte";
+  import InputsHalf from "$lib/components/contact/inputs-half.svelte";
 
   const studentUnlimitedSubject = "Educational Discount Verification";
 

@@ -1,6 +1,7 @@
 // import type { Handle } from "@sveltejs/kit";
 // import * as cookie from "cookie";
 import { sequence } from "@sveltejs/kit/hooks";
+import { basename } from "path";
 
 export const getSession: import("@sveltejs/kit").GetSession = async (event) => {
   return {
@@ -33,11 +34,13 @@ const handleChangelogEntries = async ({ event, resolve }) => {
   const changelogEntries = await Promise.all(
     Object.entries(import.meta.glob("/src/lib/contents/changelog/*.md"))
       .filter(([path]) => !path.endsWith("_template.md"))
-      .map(async ([, mod]) => {
+      .map(async ([path, mod]) => {
         const { default: content, metadata } = await mod();
+        const fileName = basename(path);
         return {
           ...metadata,
           content: content.render().html,
+          fileName,
         };
       })
   );

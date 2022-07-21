@@ -43,8 +43,13 @@
     @apply max-w-full block object-contain;
   }
 
+  a,
+  button {
+    @apply transition-all duration-200 delay-[50ms];
+  }
+
   a {
-    @apply underline text-link-grey dark:text-body underline-offset-[0.25em] transition-all duration-200 delay-[50ms];
+    @apply underline text-link-grey dark:text-body underline-offset-[0.25em];
   }
   a:hover,
   a:focus,

@@ -21,7 +21,7 @@
   import { tick } from "svelte";
   import Unleashing from "$lib/components/contact/unleashing.svelte";
   import { afterNavigate } from "$app/navigation";
-  import InputsHalf from "./inputs-half.svelte";
+  import InputsHalf from "$lib/components/contact/inputs-half.svelte";
 
   const selfHostingSubject = "Self-hosting";
   const otherSubject = "Other";
