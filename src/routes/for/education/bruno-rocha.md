@@ -35,7 +35,7 @@ data={{
 title="Teaching thousands of students using Gitpod"
 text="Gitpod helped Bruno Rocha teach students Python and Rust reducing the amount of in-person support each student needed and allowing students to learn on any device."
 card={{
-		image: "/images/customers/bruno-rocha/teaser.png",
+		image: "/images/education/bruno-rocha/teaser.png",
 		details:{
 			industry: "Education",
 			plan: "Team Unlimited, SaaS",

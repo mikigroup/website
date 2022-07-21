@@ -29,7 +29,7 @@ The following table gives an overview of the node types for the different cloud 
 
 <div slot="gcp">
 
-At first, we [create a **service account**](https://cloud.google.com/iam/docs/creating-managing-service-accounts) for the cluster. The service account needs to have the following roles:
+First, we [create a **service account**](https://cloud.google.com/iam/docs/creating-managing-service-accounts) for the cluster. The service account needs to have the following roles:
 
 | Roles                         |
 | ----------------------------- |
@@ -72,27 +72,27 @@ CLUSTER_NAME=gitpod
 REGION=us-central1
 GKE_VERSION=1.21.11-gke.900
 
-gcloud container clusters \\
-    create "${CLUSTER_NAME}" \\
-    --disk-type="pd-ssd" --disk-size="50GB" \\
-    --image-type="UBUNTU_CONTAINERD" \\
-    --machine-type="e2-standard-2" \\
-    --cluster-version="${GKE_VERSION}" \\
-    --region="${REGION}" \\
-    --service-account "${GKE_SA_EMAIL}" \\
-    --num-nodes=1 \\
-    --no-enable-basic-auth \\
-    --enable-autoscaling \\
-    --enable-autorepair \\
-    --no-enable-autoupgrade \\
-    --enable-ip-alias \\
-    --enable-network-policy \\
-    --create-subnetwork name="gitpod-${CLUSTER_NAME}" \\
-    --metadata=disable-legacy-endpoints=true \\
-    --max-pods-per-node=110 \\
-    --default-max-pods-per-node=110 \\
-    --min-nodes=0 \\
-    --max-nodes=1 \\
+gcloud container clusters \
+    create "${CLUSTER_NAME}" \
+    --disk-type="pd-ssd" --disk-size="50GB" \
+    --image-type="UBUNTU_CONTAINERD" \
+    --machine-type="e2-standard-2" \
+    --cluster-version="${GKE_VERSION}" \
+    --region="${REGION}" \
+    --service-account "${GKE_SA_EMAIL}" \
+    --num-nodes=1 \
+    --no-enable-basic-auth \
+    --enable-autoscaling \
+    --enable-autorepair \
+    --no-enable-autoupgrade \
+    --enable-ip-alias \
+    --enable-network-policy \
+    --create-subnetwork name="gitpod-${CLUSTER_NAME}" \
+    --metadata=disable-legacy-endpoints=true \
+    --max-pods-per-node=110 \
+    --default-max-pods-per-node=110 \
+    --min-nodes=0 \
+    --max-nodes=1 \
     --addons=HorizontalPodAutoscaling,NodeLocalDNS,NetworkPolicy
 ```
 
@@ -101,7 +101,7 @@ Unfortunately, you cannot create a cluster without the default node pool. Since 
 <!-- Can we re-use the default node pool instead? → https://github.com/gitpod-io/website/pull/2106#discussion_r893885815 -->
 
 ```bash
-gcloud --quiet container node-pools delete default-pool \\
+gcloud --quiet container node-pools delete default-pool \
     --cluster="${CLUSTER_NAME}" --region="${REGION}"
 ```
 
@@ -123,23 +123,23 @@ Now, we are [creating a **node pool**](https://cloud.google.com/kubernetes-engin
 | Node Labels       | `gitpod.io/workload_meta=true`,<br/>`gitpod.io/workload_ide=true`                   |
 
 ```bash
-gcloud container node-pools \\
-    create "workload-services" \\
-    --cluster="${CLUSTER_NAME}" \\
-    --disk-type="pd-ssd" \\
-    --disk-size="100GB" \\
-    --image-type="UBUNTU_CONTAINERD" \\
-    --machine-type="n2d-standard-8" \\
-    --num-nodes=1 \\
-    --no-enable-autoupgrade \\
-    --enable-autorepair \\
-    --enable-autoscaling \\
-    --metadata disable-legacy-endpoints=true \\
-    --scopes="gke-default,https://www.googleapis.com/auth/ndev.clouddns.readwrite" \\
-    --node-labels="gitpod.io/workload_meta=true,gitpod.io/workload_ide=true,gitpod.io/workload_workspace_services=true" \\
-    --max-pods-per-node=110 \\
-    --min-nodes=1 \\
-    --max-nodes=50 \\
+gcloud container node-pools \
+    create "workload-services" \
+    --cluster="${CLUSTER_NAME}" \
+    --disk-type="pd-ssd" \
+    --disk-size="100GB" \
+    --image-type="UBUNTU_CONTAINERD" \
+    --machine-type="n2d-standard-8" \
+    --num-nodes=1 \
+    --no-enable-autoupgrade \
+    --enable-autorepair \
+    --enable-autoscaling \
+    --metadata disable-legacy-endpoints=true \
+    --scopes="gke-default,https://www.googleapis.com/auth/ndev.clouddns.readwrite" \
+    --node-labels="gitpod.io/workload_meta=true,gitpod.io/workload_ide=true,gitpod.io/workload_workspace_services=true" \
+    --max-pods-per-node=110 \
+    --min-nodes=1 \
+    --max-nodes=50 \
     --region="${REGION}"
 ```
 
@@ -161,23 +161,23 @@ We are also creating a **node pool for the Gitpod workspaces**.
 | Node Labels       | `gitpod.io/workload_workspace_services=true`,<br/>`gitpod.io/workload_workspace_regular=true`,<br/>`gitpod.io/workload_workspace_headless=true` |
 
 ```bash
-gcloud container node-pools \\
-    create "workload-workspaces" \\
-    --cluster="${CLUSTER_NAME}" \\
-    --disk-type="pd-ssd" \\
-    --disk-size="100GB" \\
-    --image-type="UBUNTU_CONTAINERD" \\
-    --machine-type="n2d-standard-16" \\
-    --num-nodes=1 \\
-    --no-enable-autoupgrade \\
-    --enable-autorepair \\
-    --enable-autoscaling \\
-    --metadata disable-legacy-endpoints=true \\
-    --scopes="gke-default,https://www.googleapis.com/auth/ndev.clouddns.readwrite" \\
-    --node-labels="gitpod.io/workload_workspace_regular=true,gitpod.io/workload_workspace_headless=true" \\
-    --max-pods-per-node=110 \\
-    --min-nodes=1 \\
-    --max-nodes=50 \\
+gcloud container node-pools \
+    create "workload-workspaces" \
+    --cluster="${CLUSTER_NAME}" \
+    --disk-type="pd-ssd" \
+    --disk-size="100GB" \
+    --image-type="UBUNTU_CONTAINERD" \
+    --machine-type="n2d-standard-16" \
+    --num-nodes=1 \
+    --no-enable-autoupgrade \
+    --enable-autorepair \
+    --enable-autoscaling \
+    --metadata disable-legacy-endpoints=true \
+    --scopes="gke-default,https://www.googleapis.com/auth/ndev.clouddns.readwrite" \
+    --node-labels="gitpod.io/workload_workspace_regular=true,gitpod.io/workload_workspace_headless=true" \
+    --max-pods-per-node=110 \
+    --min-nodes=1 \
+    --max-nodes=50 \
     --region="${REGION}"
 ```
 

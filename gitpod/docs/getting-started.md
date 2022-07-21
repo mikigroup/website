@@ -22,7 +22,7 @@ data={{
 
 # Getting Started
 
-Gitpod can provide fully initialized, perfectly set-up developer environmments for any kind of software project. This page helps you understand how to provide such a configuration for _your project_.
+Gitpod can provide fully initialized, perfectly set-up developer environments for any kind of software project. This page helps you understand how to provide such a configuration for _your project_.
 `youtube: w65POyu3ZUQ`
 
 ## Start your first workspace

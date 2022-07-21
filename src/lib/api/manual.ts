@@ -1,13 +1,6 @@
-import type { Response } from "@netlify/functions/src/function/response";
-import saveFeedbackInSheet from "./_save-to-spreadsheet";
-import sendFeedbackToSlack from "./_send-to-slack";
-
-interface Feedback {
-  emotion: number;
-  note?: string;
-  url: string;
-  type: "docs" | "guides";
-}
+import saveFeedbackInSheet from "$lib/api/save-to-spreadsheet";
+import sendFeedbackToSlack from "$lib/api/send-to-slack";
+import type { Feedback } from "$lib/api/api";
 
 const emotionSlackEmojiMap = {
   1: ":sob:",
@@ -24,16 +17,15 @@ const feedbackTypetoSheetTitle = {
 
 const allowedEmotions = [1, 2, 3, 4];
 
-export const submitFeedback = async (body: string): Promise<Response> => {
-  const feedback: Feedback = JSON.parse(body) as Feedback;
-  if (!allowedEmotions.includes(feedback.emotion)) {
+export const submitFeedback = async (body: Feedback) => {
+  if (!allowedEmotions.includes(body.emotion)) {
     return {
       statusCode: 400,
       body: "Please provide a valid emotion",
     };
   }
   const hasURLPrefix = ["http://", "https://"].some((value) =>
-    feedback.url.startsWith(value)
+    body.url.startsWith(value)
   );
   if (!hasURLPrefix) {
     return {
@@ -42,14 +34,14 @@ export const submitFeedback = async (body: string): Promise<Response> => {
     };
   }
   const isSavedInSheet = await saveFeedbackInSheet({
-    sheetTitle: feedbackTypetoSheetTitle[feedback.type],
-    data: [new Date(), feedback.emotion, feedback.url, feedback.note],
+    sheetTitle: feedbackTypetoSheetTitle[body.type],
+    data: [new Date(), body.emotion, body.url, body.note],
   });
   const isSentToSlack = await sendFeedbackToSlack(`${
-    feedback.type.charAt(0).toUpperCase() + feedback.type.slice(1)
-  } feedback: ${emotionSlackEmojiMap[feedback.emotion]}
-Link: ${feedback.url}
-Note: ${feedback.note ? feedback.note : "N/A"}`);
+    body.type.charAt(0).toUpperCase() + body.type.slice(1)
+  } feedback: ${emotionSlackEmojiMap[body.emotion]}
+Link: ${body.url}
+Note: ${body.note ? body.note : "N/A"}`);
 
   const statusCode = isSavedInSheet && isSentToSlack ? 201 : 500;
   return {

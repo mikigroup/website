@@ -1,8 +1,15 @@
-<script context="module">
+<script lang="ts" context="module">
   export const prerender = true;
+
+  export async function load({ session }) {
+    const customers = session.educationCustomers;
+    return { props: { customers } };
+  }
 </script>
 
-<script>
+<script lang="ts">
+  import Stories from "$lib/components/education/stories.svelte";
+
   import Header from "$lib/components/education/header.svelte";
   import Integrate from "$lib/components/enterprise/integrate.svelte";
   import Explore from "$lib/components/explore.svelte";
@@ -19,6 +26,8 @@
     programBenefits,
   } from "$lib/contents/education";
   import { integrateFeatures } from "$lib/contents/enterprise";
+
+  export let customers: any;
 </script>
 
 <OpenGraph
@@ -49,6 +58,14 @@
   {brands}
   isCustomerStoriesLinkShown={false}
   class="py-small"
+/>
+
+<Stories
+  title="Featured Customer Stories"
+  text="Read how our customers improved their development workflows"
+  id="stories"
+  {customers}
+  class="max-w-7xl lg:grid-cols-3 xl:px-4 mb-xx-large"
 />
 
 <Faqs faq={educationFAQ} />
