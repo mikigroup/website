@@ -116,9 +116,10 @@ gcloud dns managed-zones describe ${CLUSTER_NAME} --format json | jq '.nameServe
 If the Route53 zone has not yet been created, you can do so with the following command (replace `gitpod.example.com.` with the intended zone):
 
 ```bash
+DOMAIN_NAME="gitpod.example.com"
 export ROUTE53_CALLER=$(cat /proc/sys/kernel/random/uuid)
 aws route53 create-hosted-zone \\
-    --name gitpod.example.com. \\
+    --name "${DOMAIN_NAME}." \\
     --caller-reference $ROUTE53_CALLER \\
     --hosted-zone-config Comment="gitpod-zone"
 ```
@@ -126,7 +127,7 @@ aws route53 create-hosted-zone \\
 Once the domain has been provisioned, you can get the details with the following command and record `Id` for later usage:
 
 ```bash
-aws route53 list-hosted-zones --query 'HostedZones[?Name==`gitpod.example.com.`]'
+aws route53 list-hosted-zones --query "HostedZones[?Name==\`$DOMAIN_NAME.\`]"
 ```
 
 Which should return something like:

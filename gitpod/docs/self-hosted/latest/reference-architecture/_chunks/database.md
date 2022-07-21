@@ -207,5 +207,11 @@ Returning:
 ]
 ```
 
+Store the MySQL instance endpoint for later use in the Gitpod installer:
+
+```bash
+export MYSQL_RDS_ENDPOINT="$(aws rds describe-db-instances --db-instance-identifier gitpod-instance --query 'DBInstances[0].Endpoint.Address' --output text)"
+```
+
 </div>
 </CloudPlatformToggle>
