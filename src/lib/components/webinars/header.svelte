@@ -21,13 +21,14 @@
     <div class="flex items-center">
       <Clock class="h-7 w-7 mr-micro" /> 45min
     </div>
-    <p class="flex items-center">
-      Hosted by <img
+    <div class="flex items-center">
+      <h2 class="h5">Hosted by</h2>
+      <img
         src="/images/gitpod-logo.svg"
         alt="Gitpod"
         class="h-9 w-9 mx-micro"
       />
       <Jetbrains isDark={true} class="h-9 w-9" />
-    </p>
+    </div>
   </div>
 </Header>

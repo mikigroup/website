@@ -5,7 +5,7 @@
   import { session } from "$app/stores";
 
   export let title: string;
-
+  export let text: string = "";
   export let slugs: string[];
 
   const posts = $session.posts.filter((p: BlogPost) =>
@@ -13,4 +13,4 @@
   );
 </script>
 
-<MoreArticles {title} {posts} />
+<MoreArticles {title} {text} {posts} {...$$restProps} />

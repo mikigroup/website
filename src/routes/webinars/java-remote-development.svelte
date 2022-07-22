@@ -9,7 +9,7 @@
   import Layout from "$lib/components/webinars/layout.svelte";
   import OrganizedBy from "$lib/components/webinars/organized-by.svelte";
   import Register from "$lib/components/webinars/register.svelte";
-  import { hosts } from "$lib/contents/webinars/remote-development";
+  import { hosts } from "$lib/contents/webinars/java-remote-development";
 </script>
 
 <OpenGraph
@@ -45,6 +45,9 @@
 
 <Articles
   title="Additional resources"
+  text="If you are curious to learn more on how remote developments, 
+  have a read through these blog posts."
+  textMaxW="max-w-2xl"
   slugs={[
     "gitpod-jetbrains",
     "cloud-based-development-for-everyone",

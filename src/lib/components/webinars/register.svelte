@@ -96,7 +96,7 @@
   size="small"
   class="sticky left-full {scroll > 0
     ? 'lgx:top-44'
-    : 'lgx:top-[250px]'} max-w-[642px] z-10 px-xx-small py-x-small sm:p-x-small xl:p-small transition-all duration-500 {clazz}"
+    : 'lgx:top-[250px]'} max-w-[642px] z-10 px-xx-small py-x-small sm:p-x-small xl:p-small transition-all duration-500 shadow-normal {clazz}"
 >
   <div bind:this={sectionStart}>
     {#if isEmailSent}
@@ -131,7 +131,7 @@
           <div>
             <Input
               hasError={isFormDirty && !formData.email.valid}
-              label="Work e-mail"
+              label="Work e-mail*"
               id="email"
               name="work-email"
               bind:value={formData.email.value}
